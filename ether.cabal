@@ -1,5 +1,5 @@
 name:                ether
-version:             0.5.1.0
+version:             9999
 synopsis:            Monad transformers and classes
 description:
     Ether is a Haskell library that extends @mtl@ and @transformers@ with
@@ -45,6 +45,7 @@ library
     Ether.Reader
     Ether.State
     Ether.Except
+    Ether.TagDispatch
     Ether.TaggedTrans
     Ether.Internal
 
@@ -56,9 +57,9 @@ library
     Ether.Internal.TupleInstances
 
   build-depends:
-    base >=4.9 && <4.13,
+    base >=4.9 && <5,
     transformers >=0.5.2.0,
-    transformers-lift >=0.2.0.1,
+    transformers-lift ==9999,
     mtl >=2.2.1,
     mmorph >=1.0.4,
     monad-control >=1.0.0.4,
