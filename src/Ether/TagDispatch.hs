@@ -44,12 +44,10 @@ module Ether.TagDispatch
 import qualified Control.Monad.Error.Class   as Mtl
 import qualified Control.Monad.Reader.Class  as Mtl
 import qualified Control.Monad.State.Class   as Mtl
-import qualified Control.Monad.Writer.Class  as Mtl
 
 import Ether.Except
 import Ether.Reader
 import Ether.State
-import Ether.Writer
 import Ether.TaggedTrans
 
 import Control.Monad.Trans.Identity
@@ -87,15 +85,6 @@ instance {-# OVERLAPPING #-}
     throwError = throw @tag
     catchError = catch @tag
 
-instance {-# OVERLAPPING #-}
-    ( MonadWriter tag w m, trans ~ IdentityT
-    ) => Mtl.MonadWriter w (TaggedTrans (TAG_ATTACH tag) trans m)
-  where
-    writer = writer @tag
-    tell = tell @tag
-    listen = listen @tag
-    pass = pass @tag
-
 -- | Encode type-level information for 'tagReplace'.
 data TAG_REPLACE tOld tNew
 
@@ -127,12 +116,3 @@ instance
   where
     throw = throw @tNew
     catch = catch @tNew
-
-instance
-    ( MonadWriter tNew w m, trans ~ IdentityT
-    ) => MonadWriter tOld w (TaggedTrans (TAG_REPLACE tOld tNew) trans m)
-  where
-    writer = writer @tNew
-    tell = tell @tNew
-    listen = listen @tNew
-    pass = pass @tNew

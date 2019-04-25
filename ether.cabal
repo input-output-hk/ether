@@ -44,10 +44,8 @@ library
     Ether
     Ether.Reader
     Ether.State
-    Ether.Writer
     Ether.Except
     Ether.TaggedTrans
-    Ether.TagDispatch
     Ether.Internal
 
   other-modules:

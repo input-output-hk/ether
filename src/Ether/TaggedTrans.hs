@@ -20,14 +20,11 @@ import qualified Control.Monad.Trans.Control as MC
 import qualified Control.Monad.Trans.Lift.StT    as Lift
 import qualified Control.Monad.Trans.Lift.Local  as Lift
 import qualified Control.Monad.Trans.Lift.Catch  as Lift
-import qualified Control.Monad.Trans.Lift.Listen as Lift
-import qualified Control.Monad.Trans.Lift.Pass   as Lift
 import qualified Control.Monad.Trans.Lift.CallCC as Lift
 
 import qualified Control.Monad.Cont.Class    as Mtl
 import qualified Control.Monad.Reader.Class  as Mtl
 import qualified Control.Monad.State.Class   as Mtl
-import qualified Control.Monad.Writer.Class  as Mtl
 import qualified Control.Monad.Error.Class   as Mtl
 
 import GHC.Generics (Generic)
@@ -105,18 +102,6 @@ instance Lift.LiftCatch trans => Lift.LiftCatch (TaggedTrans tag trans) where
       (coerce :: Pack tag trans m a)
       (coerce :: Unpack tag trans m a)
 
-instance Lift.LiftListen trans => Lift.LiftListen (TaggedTrans tag trans) where
-  liftListen =
-    Lift.defaultLiftListen
-      (coerce :: Pack tag trans m a)
-      (coerce :: Unpack tag trans m a)
-
-instance Lift.LiftPass trans => Lift.LiftPass (TaggedTrans tag trans) where
-  liftPass =
-    Lift.defaultLiftPass
-      (coerce :: Pack tag trans m a)
-      (coerce :: Unpack tag trans m a)
-
 instance Lift.LiftCallCC trans => Lift.LiftCallCC (TaggedTrans tag trans) where
   liftCallCC  =
     Lift.defaultLiftCallCC
@@ -157,18 +142,6 @@ instance
     get = lift Mtl.get
     put = lift . Mtl.put
     state = lift . Mtl.state
-
-instance
-    ( Mtl.MonadWriter w m
-    , Lift.LiftListen trans
-    , Lift.LiftPass trans
-    , Monad (trans m)
-    ) => Mtl.MonadWriter w (TaggedTrans tag trans m)
-  where
-    writer = lift . Mtl.writer
-    tell   = lift . Mtl.tell
-    listen = Lift.liftListen Mtl.listen
-    pass   = Lift.liftPass Mtl.pass
 
 instance
     ( Mtl.MonadError e m
